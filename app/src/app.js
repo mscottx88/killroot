@@ -5,16 +5,18 @@
 
     return {
       restrict: 'E',
-      replace: false,
+      replace: true,
       templateUrl: BASE_URL + '/app.html'
     }
   }
 
-  function appCtrl($scope) {
+  function appController($scope) {
+
+    $scope.cards = mockCards;
   }
 
-  var app = angular.module('app', []);
-  app.controller('appCtrl', ['$scope', appCtrl]);
+  var app = angular.module('app', ['dragDrop']);
+  app.controller('appController', ['$scope', appController]);
   app.directive('app', appDirective);
 
 })(angular);
