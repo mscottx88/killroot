@@ -4,9 +4,7 @@
   function dragDropControlDirective() {
     return {
       restrict: 'A',
-      scope: {
-        columnDescriptors: '='
-      },
+      scope: {},
       controller: ['$scope', dragDropControlController]
     };
   }
@@ -52,7 +50,7 @@
       }
 
       // add the "from" element to the to index
-      $scope.columnDescriptors.splice(ioData.index, 0, ($scope.columnDescriptors.splice($scope.dragStart.index, 1))[0]);
+      // $scope.columnDescriptors.splice(ioData.index, 0, ($scope.columnDescriptors.splice($scope.dragStart.index, 1))[0]);
 
       // reset the drag start
       dragStart.call(this, ioData, leftToRight);
@@ -89,17 +87,33 @@
       this.dragging = false;
     }
 
+    function addNewClonedNode(ioNode) {
+      this.clonedNodes.push({
+        node: ioNode
+      })
+      return this.clonedNodes.length - 1;
+    }
+
+    function getClonedNode(ioIndex) {
+      console.log(ioIndex);
+      return this.clonedNodes[ioIndex];
+    }
+
     // assign functions & attributes accessible by the child directive
     this.dragging = null;
     this.dragStart = dragStart.bind(this);
     this.dragOver = dragOver.bind(this);
     this.dragEnd = dragEnd.bind(this);
+
+    this.clonedNodes = [];
+    this.addNewClonedNode = addNewClonedNode.bind(this);
+    this.getClonedNode = getClonedNode.bind(this);
   }
 
   function dragDropDirective() {
     function dragDropLink(ioScope, ioElement, ioAttributes, ioParentController) {
 
-      const TEMPORARY_DRAG_IMAGE_ID = 'temporary-drag-image';
+      const TEMPORARY_DRAG_IMAGE_ID = 'temporary-drag-image'; 
 
       function dragStart(ioEvent) {
         const MAX_WIDTH_PIXELS = 300;
@@ -108,12 +122,20 @@
         var width;
         var scale;
         var rect;
+        var index;
+        var data;
         var image = {};
 
-        ioEvent.dataTransfer.effectAllowed = 'move';
-        ioEvent.dataTransfer.setData('application/json', JSON.stringify(ioAttributes.value.index));
-
         image = this.cloneNode(true);
+        index = ioParentController.addNewClonedNode(image);
+
+        data = {
+          cardIndex: ioScope.index,
+          clonedIndex: index
+        };
+
+        ioEvent.dataTransfer.effectAllowed = 'move';
+        ioEvent.dataTransfer.setData('application/json', JSON.stringify(data));
 
         image.id = TEMPORARY_DRAG_IMAGE_ID;
         image.style.position = 'absolute';
@@ -146,7 +168,7 @@
         rect = this.getClientRects()[0];
 
         ioParentController.dragStart({
-          index: ioAttributes.value.index,
+          index: ioScope.index,
           x: ioEvent.x,
           left: rect.left,
           width: rect.width
@@ -161,7 +183,9 @@
         this.classList.remove('drag-drop-drag');
 
         image = document.getElementById(TEMPORARY_DRAG_IMAGE_ID);
-        image.parentNode.removeChild(image);
+        if (image) {
+          image.parentNode.removeChild(image);
+        }
 
         ioParentController.dragEnd();
 
@@ -187,7 +211,7 @@
         rect = this.getClientRects()[0];
 
         ioParentController.dragOver({
-          index: ioAttributes.value.index,
+          index: ioScope.index,
           x: ioEvent.x,
           left: rect.left,
           width: rect.width
@@ -246,6 +270,9 @@
 
     return {
       restrict: 'A',
+      scope: {
+        index: '='
+      },
       require: '^dragDropControl',
       link: dragDropLink
     };

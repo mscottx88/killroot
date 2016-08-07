@@ -15,7 +15,7 @@
     $scope.cards = mockCards;
   }
 
-  var app = angular.module('app', ['dragDrop']);
+  var app = angular.module('app', ['dragDrop', 'droppable']);
   app.controller('appController', ['$scope', appController]);
   app.directive('app', appDirective);
 
