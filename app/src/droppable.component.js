@@ -1,7 +1,7 @@
 (function(angular) {
   'use strict';
 
-  function droppableDirective() {
+  function droppableDirective($compile) {
     function droppableLink(ioScope, ioElement, ioAttributes, ioParentController) {
       function dragOver(ioEvent) {
         if (ioEvent.preventDefault) {
@@ -39,6 +39,10 @@
       function drop(ioEvent) {
         var data;
         var node;
+        var card;
+        var getCard;
+        var template;
+        var x, y;
 
         if (ioEvent.stopPropagation) {
           ioEvent.stopPropagation();
@@ -47,14 +51,37 @@
         this.classList.remove('drag-drop-over');
 
         data = JSON.parse(ioEvent.dataTransfer.getData('application/json'));
-        node = ioParentController.getClonedNode(data.clonedIndex).node;
 
-        node.id = '';
-        node.style['left'] = ioEvent.pageX.toString() + 'px';
-        node.style['top'] = ioEvent.pageY.toString() + 'px';
-        node.style['position'] = 'absolute';
+        if (!data.cloned) {
+          node = ioParentController.getClonedNode(data.clonedIndex).node;
+        } else {
+          node = ioParentController.getClonedNode(data.clonedIndex).node[0];
+        }
 
-        document.body.appendChild(node);
+        x = (ioEvent.pageX - (node.clientWidth / 2).toFixed(0)) + 'px';
+        y = (ioEvent.pageY - (node.clientHeight / 2).toFixed(0)) + 'px';
+
+        if (!data.cloned) {
+          getCard = ioScope.getCard();
+          card = getCard(data.cardIndex);
+
+          template = '<div class="cards-container-card" cloned="true" draggable index="' + data.clonedIndex + '">'
+                  +   card.text
+                  + '</div>'
+
+          node = angular.element(template);
+          ioElement.append(node);
+          $compile(node)(ioScope);
+
+          node[0].style['left'] = x;
+          node[0].style['top'] = y;
+          node[0].style['position'] = 'absolute';
+
+          ioParentController.setClonedNode(data.clonedIndex, node);
+        } else {
+          node.style['left'] = x;
+          node.style['top'] = y;
+        }
 
         return false;
       }
@@ -73,7 +100,7 @@
     return {
       restrict: 'A',
       scope: {
-        index: '='
+        getCard: '&'
       },
       require: '^dragDropControl',
       link: droppableLink
@@ -81,6 +108,6 @@
   }
 
   var app = angular.module('droppable', []);
-  app.directive('droppable', [droppableDirective]);
+  app.directive('droppable', ['$compile', droppableDirective]);
 
 })(angular);
