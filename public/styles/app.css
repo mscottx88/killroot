@@ -16,13 +16,9 @@ body, html {
 .cards-container {
   border-right: 1px solid black;
   height: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-wrap: normal;
-}
-
-.cards-container div {
-  column-count: 3;
-  column-width: 5vw;
+  column-count: 2;
 }
 
 .cards-container .card-row {
@@ -34,20 +30,22 @@ body, html {
   height: 5vw;
 }
 
-.cards-container .card {
+.cards-container-card {
   border: 1px solid darkgray;
   border-radius: 5px;
-  font-size: x-large;  
+  font-size: large;  
   font-weight: bold;
+  font-family: Courier New, Courier, monospace;
   height: 4vw;
   width: 4vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin: auto;
-  display: table-cell;
   text-align: center;
-  vertical-align: middle;
 }
 
-.cards-container .card:hover {
+.cards-container-card:hover {
   background-color: lightblue;
 }
 

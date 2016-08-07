@@ -11,11 +11,15 @@
   }
 
   function appController($scope) {
+    function getCard(ioIndex) {
+      return $scope.cards[ioIndex];
+    }
 
     $scope.cards = mockCards;
+    $scope.getCard = getCard;
   }
 
-  var app = angular.module('app', ['dragDrop', 'droppable']);
+  var app = angular.module('app', ['dragDropControl', 'draggable', 'droppable']);
   app.controller('appController', ['$scope', appController]);
   app.directive('app', appDirective);
 

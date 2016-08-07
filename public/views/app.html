@@ -1,14 +1,14 @@
-<div class="programming-challenge-game-board">
+<div class="programming-challenge-game-board" drag-drop-control>
   <table>
-    <tbody drag-drop-control>
+    <tbody>
       <tr>
         <td>
           <div class="cards-container">
-            <table class="cards-container">
+            <table>
               <tbody>
-                <tr class="card-row" drag-drop index="$index" ng-repeat="card in cards">
+                <tr class="card-row" cloned="false" draggable index="$index" ng-repeat="card in cards">
                   <td>
-                    <div class="card">
+                    <div class="cards-container-card">
                       {{card.text}}
                     </div>
                   </td>
@@ -18,19 +18,11 @@
           </div>
         </td>
         <td class="module-drop-area-column"> 
-          <div class="module-drop-area" droppable>
+          <div class="module-drop-area" droppable get-card="getCard">
             return 'Michael P. Scott';
           </div>
           <div class="action-button-area">
-            <table>
-              <tbody>
-                <tr>
-                  <td>
-                    Buttons go here son!
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            Buttons go here son!
           </div>
         </td>
       </tr>
