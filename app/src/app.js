@@ -40,7 +40,13 @@
       $scope.clonedNodes[ioIndex].visible = ioData.visible;
 
       rebuildProgramText();
+      $scope.$applyAsync();
+    }
 
+    function removeClonedNode(ioIndex) {
+      $scope.clonedNodes.splice(ioIndex, 1);
+
+      rebuildProgramText();
       $scope.$applyAsync();
     }
 
@@ -49,17 +55,23 @@
     }
 
     function rebuildProgramText() {
-      function compareLeftToRight(a, b) {
+      function comparator(a, b) {
         if (a.left < b.left) {
           return -1;
         } else if (a.left > b.left) {
           return +1;
         } else {
-          return 0;
+          if (a.top < b.top) {
+            return -1;
+          } else if (a.top > b.top) {
+            return +1;
+          } else {
+            return 0;
+          }
         }
       }
       
-      $scope.clonedNodes.sort(compareLeftToRight);
+      $scope.clonedNodes.sort(comparator);
 
       clearProgramText();
       for (var index = 0; index < $scope.clonedNodes.length; index++) {
@@ -76,6 +88,7 @@
     this.addNewClonedNode = addNewClonedNode.bind(this);
     this.getClonedNode = getClonedNode.bind(this);
     this.setClonedNode = setClonedNode.bind(this);
+    this.removeClonedNode = removeClonedNode.bind(this);
   }
 
   var app = angular.module('app', ['draggable', 'droppable']);

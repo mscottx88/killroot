@@ -9,7 +9,8 @@
   "author": "Michael P. Scott",
   "license": "ISC",
   "dependencies": {
-    "angular": "^1.5.8"
+    "angular": "^1.5.8",
+    "font-awesome": "^4.6.3"
   },
   "devDependencies": {
     "lite-server": "^2.2.2"
