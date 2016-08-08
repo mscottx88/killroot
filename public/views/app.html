@@ -1,28 +1,26 @@
-<div class="programming-challenge-game-board" drag-drop-control>
+<div class="programming-challenge-game-board">
   <table>
     <tbody>
       <tr>
         <td>
           <div class="cards-container">
-            <table>
-              <tbody>
-                <tr class="card-row" cloned="false" draggable index="$index" ng-repeat="card in cards">
-                  <td>
-                    <div class="cards-container-card">
-                      {{card.text}}
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="cards-container-card" cloned="false" draggable index="$index" ng-repeat="card in cards">
+              {{card.text}}
+            </div>
           </div>
         </td>
         <td class="module-drop-area-column"> 
-          <div class="module-drop-area" droppable get-card="getCard">
-            return 'Michael P. Scott';
+          <div class="module-drop-area" droppable>
+            <div class="cards-container-card" cloned="true" draggable index="$index" ng-repeat="node in clonedNodes" style="left: {{node.left}}; top: {{node.top}}; position: absolute;" ng-show="node.visible">
+              {{node.text}}
+            </div>
+          </div>
+          <div class="module-program-text-area">
+            <div class="module-program-text">
+              {{programText}}
+            </div>
           </div>
           <div class="action-button-area">
-            Buttons go here son!
           </div>
         </td>
       </tr>

@@ -40,7 +40,6 @@
         var data;
         var node;
         var card;
-        var getCard;
         var template;
         var x, y;
 
@@ -51,37 +50,16 @@
         this.classList.remove('drag-drop-over');
 
         data = JSON.parse(ioEvent.dataTransfer.getData('application/json'));
+        node = ioParentController.getClonedNode(data.clonedIndex);
 
-        if (!data.cloned) {
-          node = ioParentController.getClonedNode(data.clonedIndex).node;
-        } else {
-          node = ioParentController.getClonedNode(data.clonedIndex).node[0];
-        }
+        x = (ioEvent.pageX - Math.round(node.width / 2)) + 'px';
+        y = (ioEvent.pageY - Math.round(node.height / 2)) + 'px';
 
-        x = (ioEvent.pageX - (node.clientWidth / 2).toFixed(0)) + 'px';
-        y = (ioEvent.pageY - (node.clientHeight / 2).toFixed(0)) + 'px';
-
-        if (!data.cloned) {
-          getCard = ioScope.getCard();
-          card = getCard(data.cardIndex);
-
-          template = '<div class="cards-container-card" cloned="true" draggable index="' + data.clonedIndex + '">'
-                  +   card.text
-                  + '</div>'
-
-          node = angular.element(template);
-          ioElement.append(node);
-          $compile(node)(ioScope);
-
-          node[0].style['left'] = x;
-          node[0].style['top'] = y;
-          node[0].style['position'] = 'absolute';
-
-          ioParentController.setClonedNode(data.clonedIndex, node);
-        } else {
-          node.style['left'] = x;
-          node.style['top'] = y;
-        }
+        ioParentController.setClonedNode(data.clonedIndex, {
+          left: x,
+          top: y,
+          visible: true
+        });
 
         return false;
       }
@@ -99,10 +77,8 @@
 
     return {
       restrict: 'A',
-      scope: {
-        getCard: '&'
-      },
-      require: '^dragDropControl',
+      scope: {},
+      require: '^app',
       link: droppableLink
     };
   }

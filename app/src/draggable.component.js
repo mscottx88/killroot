@@ -12,31 +12,30 @@
         var height;
         var width;
         var scale;
-        var rect;
         var index;
         var data;
-        var image = {};
-
-        image = this.cloneNode(true);
+        var image;
 
         if (!ioScope.cloned) {
-          index = ioParentController.addNewClonedNode(image);
-          data = {
-            cardIndex: ioScope.index,
-            clonedIndex: index,
-            cloned: false
-          };
+          index = ioParentController.addNewClonedNode({
+            fromIndex: ioScope.index,
+            width: this.clientWidth,
+            height: this.clientHeight
+          });
         } else {
-          data = {
-            cardIndex: ioScope.index,
-            clonedIndex: ioScope.index,
-            cloned: true
-          };
+          index = ioScope.index;
         }
+
+        data = {
+          cardIndex: ioScope.index,
+          clonedIndex: index,
+          cloned: ioScope.cloned
+        };
 
         ioEvent.dataTransfer.effectAllowed = 'move';
         ioEvent.dataTransfer.setData('application/json', JSON.stringify(data));
 
+        image = this.cloneNode(true);
         image.id = TEMPORARY_DRAG_IMAGE_ID;
         image.style.position = 'absolute';
 
@@ -54,7 +53,7 @@
 
         image.style.width = width.toString() + 'px';
         image.style.height = height.toString() + 'px';
-        image.style.top = -height.toString() + 'px';
+        image.style.top = -(height * 2).toString() + 'px';
 
         document.body.appendChild(image);
 
@@ -62,15 +61,6 @@
         ioEvent.dataTransfer.setDragImage(image, width / 2, height / 2);
 
         this.classList.add('drag-drop-drag');
-
-        rect = this.getClientRects()[0];
-
-        ioParentController.dragStart({
-          index: ioScope.index,
-          x: ioEvent.x,
-          left: rect.left,
-          width: rect.width
-        });
 
         return false;
       }
@@ -84,8 +74,6 @@
         if (image) {
           image.parentNode.removeChild(image);
         }
-
-        ioParentController.dragEnd();
 
         return false;
       }
@@ -108,7 +96,7 @@
         index: '=',
         cloned: '='
       },
-      require: '^dragDropControl',
+      require: '^app',
       link: draggableLink
     };
   }
