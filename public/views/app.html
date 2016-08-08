@@ -11,6 +11,9 @@
         </td>
         <td class="module-drop-area-column"> 
           <div class="module-drop-area" droppable>
+            <div class="module-drop-icons-area">
+              <i id="module-drop-area-trash-can" class="fa fa-3x fa-trash-o" droppable />
+            </div>
             <div class="cards-container-card" cloned="true" draggable index="$index" ng-repeat="node in clonedNodes" style="left: {{node.left}}; top: {{node.top}}; position: absolute;" ng-show="node.visible">
               {{node.text}}
             </div>

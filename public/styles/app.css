@@ -70,3 +70,8 @@ body, html {
   margin: auto;
   font-family: Courier New, Courier, monospace;
 }
+
+.module-drop-icons-area {
+  float: right;
+  margin-right: 10px;
+}
