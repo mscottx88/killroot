@@ -21,15 +21,6 @@ body, html {
   column-count: 2;
 }
 
-.cards-container .card-row {
-  height: 5vw;
-  vertical-align: top;
-}
-
-.cards-container .card-row td {
-  height: 5vw;
-}
-
 .cards-container-card {
   border: 1px solid darkgray;
   border-radius: 5px;
@@ -41,8 +32,8 @@ body, html {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: auto;
   text-align: center;
+  background-color: white;
 }
 
 .cards-container-card:hover {
@@ -55,10 +46,27 @@ body, html {
 
 .action-button-area {
   border-top: 1px solid black;
-  height: 20%;
+  height: 15%;
   width: 100%;
 }
 
 .module-drop-area-column {
   width: 100%;
+}
+
+.module-program-text-area {
+  border-top: 1px solid black;
+  height: 5%;
+  width: 100%;
+  display: table;
+}
+
+.module-program-text {
+  display: table-cell;
+  text-align: left;
+  vertical-align: middle;
+  align-content: center;
+  align-items: center;
+  margin: auto;
+  font-family: Courier New, Courier, monospace;
 }

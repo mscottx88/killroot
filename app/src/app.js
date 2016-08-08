@@ -6,20 +6,79 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: BASE_URL + '/app.html'
+      templateUrl: BASE_URL + '/app.html',
+      controller: ['$scope', appController]
     }
   }
 
   function appController($scope) {
-    function getCard(ioIndex) {
-      return $scope.cards[ioIndex];
+    function addNewClonedNode(ioData) {
+      var data;
+       
+      data = {
+        text: $scope.cards[ioData.fromIndex].text,
+        fromIndex: ioData.fromIndex,
+        height: ioData.height,
+        width: ioData.width,
+        left: 0,
+        top: 0,
+        visible: false
+      };
+
+      $scope.clonedNodes.push(data);
+
+      return $scope.clonedNodes.length - 1;
     }
 
+    function getClonedNode(ioIndex) {
+      return $scope.clonedNodes[ioIndex];
+    }
+
+    function setClonedNode(ioIndex, ioData) {
+      $scope.clonedNodes[ioIndex].left = ioData.left;
+      $scope.clonedNodes[ioIndex].top = ioData.top;
+      $scope.clonedNodes[ioIndex].visible = ioData.visible;
+
+      rebuildProgramText();
+
+      $scope.$applyAsync();
+    }
+
+    function clearProgramText() {
+      $scope.programText = '';
+    }
+
+    function rebuildProgramText() {
+      function compareLeftToRight(a, b) {
+        if (a.left < b.left) {
+          return -1;
+        } else if (a.left > b.left) {
+          return +1;
+        } else {
+          return 0;
+        }
+      }
+      
+      $scope.clonedNodes.sort(compareLeftToRight);
+
+      clearProgramText();
+      for (var index = 0; index < $scope.clonedNodes.length; index++) {
+        if (index > 0) {
+          $scope.programText += ' ';
+        }
+        $scope.programText += $scope.clonedNodes[index].text;
+      }
+    }
+
+    $scope.clonedNodes = [];
     $scope.cards = mockCards;
-    $scope.getCard = getCard;
+
+    this.addNewClonedNode = addNewClonedNode.bind(this);
+    this.getClonedNode = getClonedNode.bind(this);
+    this.setClonedNode = setClonedNode.bind(this);
   }
 
-  var app = angular.module('app', ['dragDropControl', 'draggable', 'droppable']);
+  var app = angular.module('app', ['draggable', 'droppable']);
   app.controller('appController', ['$scope', appController]);
   app.directive('app', appDirective);
 
