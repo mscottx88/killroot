@@ -4,8 +4,8 @@
       <tr>
         <td>
           <div class="cards-container">
-            <div class="cards-container-card" cloned="false" draggable index="$index" ng-repeat="card in cards">
-              {{card.text}}
+            <div class="cards-container-card" ng-class="card.type" cloned="false" draggable index="$index" ng-repeat="card in cards">
+              <div>{{card.text}}</div>
             </div>
           </div>
         </td>
@@ -16,12 +16,13 @@
             </div>
             <div class="cloned-node-row-container" index="$index" ng-repeat="row in clonedNodeRows" style="left: {{row.left}}px; top: {{row.top}}px; width: {{row.width}}px; height: {{row.height}}px; position: absolute;" ng-show="row.visible">
             </div>
-            <div class="cards-container-card" cloned="true" draggable index="$index" ng-repeat="node in clonedNodes" style="left: {{node.left}}px; top: {{node.top}}px; position: absolute;" ng-show="node.visible">
-              {{node.text}}
+            <div class="cards-container-card" ng-class="node.type" cloned="true" draggable index="$index" ng-repeat="node in clonedNodes" style="left: {{node.left}}px; top: {{node.top}}px; position: absolute;" ng-show="node.visible">
+              <div>{{node.text}}</div>
             </div>
           </div>
           <div class="module-program-text-area">
-            <div class="module-program-text" ng-repeat="line in programTextLines">{{line.text}}<br />  
+            <div class="module-program-text" ng-repeat="line in programTextLines">
+              <div>{{line.text}}<br /></div>  
             </div>
           </div>
           <div class="action-button-area">
