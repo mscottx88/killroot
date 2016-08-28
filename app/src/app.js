@@ -146,6 +146,8 @@
       deltaY = ioY - ioSource.top;
 
       $scope.clonedNodeRows[ioSource.rowIndex].nodes.forEach(moveRelative);
+      $scope.clonedNodeRows[ioSource.rowIndex].left += deltaX;
+      $scope.clonedNodeRows[ioSource.rowIndex].top += deltaY;
     }
 
     function isRectangleInRectangleVerticalRange(ioSource, ioTarget) {
@@ -270,6 +272,26 @@
       ioRows.forEach(condenseRow);
     }
 
+    function onNodeDrag(ioEvent, ioIndex) {
+      var node; 
+      var x, y;
+
+      node = this.getClonedNode(ioIndex);
+
+      x = (ioEvent.pageX - Math.round(node.width / 2));
+      y = (ioEvent.pageY - Math.round(node.height / 2));
+
+      moveSiblingNodes(node, x, y);
+
+      this.setClonedNode(ioIndex, {
+        left: x,
+        top: y,
+        visible: true
+      });
+
+      $scope.$applyAsync();
+    }
+
     $scope.clonedNodes = [];
     $scope.clonedNodeRows = [];
     $scope.cards = mockCards;
@@ -279,5 +301,6 @@
     this.setClonedNode = setClonedNode.bind(this);
     this.removeClonedNode = removeClonedNode.bind(this);
     this.onCardDropped = onCardDropped.bind(this);
+    this.onNodeDrag = onNodeDrag.bind(this);
   }
 })(angular);
