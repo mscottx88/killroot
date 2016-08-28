@@ -14,13 +14,14 @@
             <div class="module-drop-icons-area">
               <i id="module-drop-area-trash-can" class="fa fa-3x fa-trash-o" droppable />
             </div>
-            <div class="cards-container-card" cloned="true" draggable index="$index" ng-repeat="node in clonedNodes" style="left: {{node.left}}; top: {{node.top}}; position: absolute;" ng-show="node.visible">
+            <div class="cloned-node-row-container" index="$index" ng-repeat="row in clonedNodeRows" style="left: {{row.left}}px; top: {{row.top}}px; width: {{row.width}}px; height: {{row.height}}px; position: absolute;" ng-show="row.visible">
+            </div>
+            <div class="cards-container-card" cloned="true" draggable index="$index" ng-repeat="node in clonedNodes" style="left: {{node.left}}px; top: {{node.top}}px; position: absolute;" ng-show="node.visible">
               {{node.text}}
             </div>
           </div>
           <div class="module-program-text-area">
-            <div class="module-program-text">
-              {{programText}}
+            <div class="module-program-text" ng-repeat="line in programTextLines">{{line.text}}<br />  
             </div>
           </div>
           <div class="action-button-area">

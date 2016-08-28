@@ -21,14 +21,19 @@ body, html {
   column-count: 2;
 }
 
+div.cloned-node-row-container {
+  border: 1px solid darkgreen;
+  border-radius: 5px;
+}
+
 .cards-container-card {
   border: 1px solid darkgray;
   border-radius: 5px;
   font-size: large;  
   font-weight: bold;
   font-family: Courier New, Courier, monospace;
-  height: 4vw;
-  width: 4vw;
+  height: 77px;
+  width: 77px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -59,19 +64,17 @@ body, html {
   height: 5%;
   width: 100%;
   display: table;
+  column-count: 1;
 }
 
 .module-program-text {
-  display: table-cell;
   text-align: left;
-  vertical-align: middle;
-  align-content: center;
-  align-items: center;
-  margin: auto;
   font-family: Courier New, Courier, monospace;
+  position: relative;
+  left: 0px;
 }
 
 .module-drop-icons-area {
   float: right;
-  margin-right: 10px;
+  margin-right: 20px;
 }

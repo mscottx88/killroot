@@ -37,36 +37,13 @@
       }
 
       function drop(ioEvent) {
-        var data;
-        var node;
-        var card;
-        var template;
-        var x, y;
-
         if (ioEvent.stopPropagation) {
           ioEvent.stopPropagation();
         }
 
         this.classList.remove('drag-drop-over');
 
-        data = JSON.parse(ioEvent.dataTransfer.getData('application/json'));
-
-        if (this.id === 'module-drop-area-trash-can') {
-          if (data.cloned) {
-            ioParentController.removeClonedNode(data.clonedIndex);
-          }
-        } else {
-          node = ioParentController.getClonedNode(data.clonedIndex);
-
-          x = (ioEvent.pageX - Math.round(node.width / 2)) + 'px';
-          y = (ioEvent.pageY - Math.round(node.height / 2)) + 'px';
-
-          ioParentController.setClonedNode(data.clonedIndex, {
-            left: x,
-            top: y,
-            visible: true
-          });
-        }
+        ioParentController.onCardDropped(ioEvent, this.id, JSON.parse(ioEvent.dataTransfer.getData('application/json')));
 
         return false;
       }
