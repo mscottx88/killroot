@@ -30,7 +30,8 @@
         width: ioData.width,
         left: 0,
         top: 0,
-        visible: false
+        visible: false,
+        type: $scope.cards[ioData.fromIndex].type
       };
 
       $scope.clonedNodes.push(data);
@@ -84,7 +85,7 @@
           if (ioIndex > 0) {
             textLine += ' ';
           }
-          textLine += $scope.clonedNodes[ioNode].text;
+          textLine += ioNode.text;
         }
 
         ioRow.nodes.forEach(appendNodeText);
@@ -112,6 +113,8 @@
         x = (ioEvent.pageX - Math.round(node.width / 2));
         y = (ioEvent.pageY - Math.round(node.height / 2));
 
+        moveSiblingNodes(node, x, y);
+
         this.setClonedNode(ioData.clonedIndex, {
           left: x,
           top: y,
@@ -121,6 +124,28 @@
 
       rebuildClonedNodeRows();
       rebuildProgramText();
+    }
+
+    function moveSiblingNodes(ioSource, ioX, ioY) {
+      var deltaX, deltaY;
+
+      function moveRelative(ioNode, ioIndex) {
+        if (ioIndex === 0) {
+          return;
+        }
+
+        ioNode.left += deltaX;
+        ioNode.top += deltaY;
+      }
+
+      if (typeof ioSource.ordinalIndex === 'undefined' || ioSource.ordinalIndex !== 0) {
+        return;
+      }
+
+      deltaX = ioX - ioSource.left;
+      deltaY = ioY - ioSource.top;
+
+      $scope.clonedNodeRows[ioSource.rowIndex].nodes.forEach(moveRelative);
     }
 
     function isRectangleInRectangleVerticalRange(ioSource, ioTarget) {
@@ -165,12 +190,12 @@
             height: ioNode.height,
             width: ioNode.width,
             visible: true,
-            nodes: [ioIndex]
+            nodes: [$scope.clonedNodes[ioIndex]]
           }
           rows.push(row);
         } else {
           extendBoundingRectangle(ioNode, rows[index]);
-          rows[index].nodes.push(ioIndex);
+          rows[index].nodes.push($scope.clonedNodes[ioIndex]);
         }
       }
 
@@ -179,9 +204,20 @@
 
       condenseClonedNodeRows(rows);
       sortClonedNodeRows(rows);
+      assignClonedNodeRows(rows);
 
       $scope.clonedNodeRows = rows;
       $scope.$applyAsync();
+    }
+
+    function assignClonedNodeRows(ioRows) {
+      function assignNodes(ioRow, ioIndex) {
+        function assignRow(ioNode) {
+          ioNode.rowIndex = ioIndex;
+        }
+        ioRow.nodes.forEach(assignRow);
+      }
+      ioRows.forEach(assignNodes);
     }
 
     function sortClonedNodeRows(ioRows) {
@@ -204,30 +240,31 @@
         var top, left;
 
         function findTopLeftNodes(ioNode) {
-          if ($scope.clonedNodes[ioNode].top < top || typeof top === 'undefined') {
-            top = $scope.clonedNodes[ioNode].top;
+          if (ioNode.top < top || typeof top === 'undefined') {
+            top = ioNode.top;
             topNode = ioNode;
           }
-          if ($scope.clonedNodes[ioNode].left < left || typeof left === 'undefined') {
-            left = $scope.clonedNodes[ioNode].left;
+          if (ioNode.left < left || typeof left === 'undefined') {
+            left = ioNode.left;
             leftNode = ioNode;
           }
         }
 
         function alignNode(ioNode, ioIndex) {
-          if ($scope.clonedNodes[ioNode].top !== top) {
-            $scope.clonedNodes[ioNode].top = top;
+          if (ioNode.top !== top) {
+            ioNode.top = top;
           }
-          if ($scope.clonedNodes[ioNode].left !== left) {
-            $scope.clonedNodes[ioNode].left = left + (($scope.clonedNodes[ioNode].width + ($scope.clonedNodes[ioNode].width * NODE_ROW_PADDING_PERCENT)) * ioIndex);
+          if (ioNode.left !== left) {
+            ioNode.left = left + ((ioNode.width + (ioNode.width * NODE_ROW_PADDING_PERCENT)) * ioIndex);
           }
+          ioNode.ordinalIndex = ioIndex;
         }
 
         ioRow.nodes.forEach(findTopLeftNodes);
         ioRow.nodes.forEach(alignNode);
 
-        ioRow.height = $scope.clonedNodes[topNode].height;
-        ioRow.width = ($scope.clonedNodes[leftNode].width * ioRow.nodes.length) + ((ioRow.nodes.length - 1) * $scope.clonedNodes[leftNode].width * NODE_ROW_PADDING_PERCENT);
+        ioRow.height = topNode.height;
+        ioRow.width = (leftNode.width * ioRow.nodes.length) + ((ioRow.nodes.length - 1) * leftNode.width * NODE_ROW_PADDING_PERCENT);
       }
 
       ioRows.forEach(condenseRow);

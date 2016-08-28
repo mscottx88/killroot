@@ -41,6 +41,19 @@ div.cloned-node-row-container {
   background-color: white;
 }
 
+.cards-container-card.keyword {
+  color: darkblue;
+  font-style: italic;
+}
+
+.cards-container-card.separator {
+  color: darkgreen;
+}
+
+.cards-container-card.identifier {
+  color: darkorange;
+}
+
 .cards-container-card:hover {
   background-color: lightblue;
 }
